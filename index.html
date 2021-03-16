@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<head>
+    <title>Simple Example</title>
+    <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
+</head>
+
+<body>
+    <form action="action">
+        <!-- This is called "view" of HTML markup that defines the appearance of UI -->
+        <label for="firstName">First Name:</label><br>
+        <select data-bind="options: prefixOptions, value: selectedPrefix"></select>
+        <input type="text" data-bind="value: firstName"><br>
+        <label for="lastName">Last Name:</label><br><input type="text" data-bind="value: lastName"><br>
+        <label for="gender">Gender:</label><br>
+        Male:<input type="radio" name="gender" value="male" data-bind="checked: radioButtonValue">
+        Female:<input type="radio" name="gender" value="female" data-bind="checked: radioButtonValue"><br>
+
+        <label for="gender">Hobbies:</label><br>
+        Coding<input type="checkbox" value="coding" data-bind="checked: checkBoxValue">
+        Music<input type="checkbox" value="music" data-bind="checked: checkBoxValue">
+        Travelling<input type="checkbox" value="travelling" data-bind="checked: checkBoxValue"><br>
+        <label for="phone">Phone Number:</label><br>
+        <input type="tel" name="phone" data-bind="value: phoneNumber" pattern="^\d+$" maxlength="10" minlength="10"><br>
+        <label for="country">Country:</label>
+        <select data-bind="options: countryOptions, optionsCaption:'Select a country', value: selectedCountry"></select><br>
+        <div data-bind="if: selectedCountry"><label for="state">State:</label><br><input type="text" data-bind="value: stateInput"><br></div>
+
+        <button type="submit">Submit</button>
+    </form>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Hobbies</th>
+            <th>Phone Number</th>
+            <th>Country</th>
+            <th>State</th>
+            <th>Action</th>
+
+        </tr>
+        <tr>
+            <td data-bind="if: firstName, if:lastName"><span data-bind="text: fullName"></span></td>
+            <td><span data-bind="text: radioButtonValue"></span></td>
+            <td><span data-bind="text: checkBoxValue"></span></td>
+            <td><span data-bind="text: phoneNumber"></span></td>
+            <td><span data-bind="text: selectedCountry"></span></td>
+            <td><span data-bind="text: stateInput"></span></td>
+            <td data-bind="if: firstName, if:lastName"><button data-bind="click: deleteData">Delete</button></td>
+        </tr>
+    </table>
+
+    <script>
+        function AppViewModel() {
+            this.prefixOptions = ko.observableArray(["Mr.", "Ms.", "Mrs."]);
+            this.selectedPrefix = ko.observable("");
+            this.firstName = ko.observable();
+            this.lastName = ko.observable();
+
+            this.fullName = ko.computed(function () {
+                return this.selectedPrefix() + " " + this.firstName() + " " + this.lastName();
+            }, this);
+
+            this.radioButtonValue = ko.observable();
+            this.checkBoxValue = ko.observableArray();
+            this.phoneNumber = ko.observable();
+            this.countryOptions = ko.observableArray(["India", "America", "Italy", "Russia"]);
+            this.selectedCountry = ko.observable();
+            this.stateInput = ko.observable();
+            this.deleteData = function () {
+                this.firstName("");
+                this.lastName("");
+                this.selectedPrefix("");
+                this.radioButtonValue("");
+                this.checkBoxValue("");
+                this.phoneNumber("");
+                this.selectedCountry("");
+                this.stateInput("");
+            }
+        }
+        ko.applyBindings(new AppViewModel());
+    </script>
+</body>
+</html>
